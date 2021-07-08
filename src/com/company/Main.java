@@ -26,6 +26,7 @@ public class Main {
 
         Random random = new Random();
 
+        //поля
         int fieldSize = 2;
         char compField[][] = new char[fieldSize][fieldSize];
         char userField[][] = new char[fieldSize][fieldSize];
@@ -40,6 +41,7 @@ public class Main {
         boolean isCorrectInput = true;
         String winner = "";
 
+        //обнулили поля
         for (int i = 0; i < fieldSize; i++) {
             for (int j = 0; j < fieldSize; j++) {
                 compField[i][j] = EMPTY_CELL;
@@ -47,7 +49,9 @@ public class Main {
             }
         }
 
+        //компьютерное поле
         for (int k = 0; k < countCompShips; k++) {
+            //проверка,чтобы не ставились друг на друга символы
             do {
                 iCell = random.nextInt(fieldSize);
                 jCell = random.nextInt(fieldSize);
@@ -56,6 +60,7 @@ public class Main {
             compField[iCell][jCell] = SHIP_CELL;
         }
 
+        //поле игрока
         for (int k = 0; k < countUserShips; k++) {
             do {
                 iCell = random.nextInt(fieldSize);
@@ -65,11 +70,15 @@ public class Main {
             userField[iCell][jCell] = SHIP_CELL;
         }
 
+        //игровой цикл
         while (isPlay == true) {
+
+            //вывод 50 отступов
             for (int k = 0; k < 50; k++) {
                 System.out.println();
             }
 
+            //вывод поля игрока
             System.out.println("Поле игрока:");
             for (int i = 0; i < fieldSize; i++) {
                 for (int j = 0; j < fieldSize; j++) {
@@ -80,10 +89,12 @@ public class Main {
 
             System.out.println();
 
+            //вывод поля компьютера
             System.out.println("Поле компьютера:");
             for (int i = 0; i < fieldSize; i++) {
                 for (int j = 0; j < fieldSize; j++) {
                     if (compField[i][j] == SHIP_CELL) {
+                        //выводит точку,чтобы скрыты были корабли
                         System.out.printf("%-2c", EMPTY_CELL);
                     } else {
                         System.out.printf("%-2c", compField[i][j]);
@@ -94,6 +105,7 @@ public class Main {
 
             System.out.println();
 
+            //цикл ходов игрока
             switch (step) {
                 case USER_STEP:
                     System.out.println("Ход игрока");
@@ -102,6 +114,7 @@ public class Main {
                         isCorrectInput = true;
                         Scanner input = new Scanner(System.in);
 
+                        //ввод игрока
                         try {
                             System.out.print("Введите i: ");
                             iCell = input.nextInt();
@@ -113,6 +126,7 @@ public class Main {
                             continue;
                         }
 
+                        //проверка
                         if (iCell < 0 || iCell > fieldSize - 1 || jCell < 0 || jCell > fieldSize - 1) {
                             isCorrectInput = false;
                             continue;
@@ -126,11 +140,11 @@ public class Main {
                     } while (isCorrectInput == false);
 
                     if (compField[iCell][jCell] == EMPTY_CELL) {
-                        compField[iCell][jCell] = MISS_CELL;
-                        step = COMP_STEP;
+                        compField[iCell][jCell] = MISS_CELL; //промах
+                        step = COMP_STEP;//переход хода компу
                     } else if (compField[iCell][jCell] == SHIP_CELL) {
-                        compField[iCell][jCell] = DEAD_CELL;
-                        countCompShips--;
+                        compField[iCell][jCell] = DEAD_CELL; //убил
+                        countCompShips--;//уменьшается кол-во кораблей
                     }
 
                     break;
@@ -141,12 +155,14 @@ public class Main {
                     Scanner input = new Scanner(System.in);
                     input.nextLine();
 
+                    //рандомит координаты
                     do {
                         isCorrectInput = true;
 
                         iCell = random.nextInt(fieldSize);
                         jCell = random.nextInt(fieldSize);
 
+                        //не  должен заполнять уже убитые
                         if (userField[iCell][jCell] == DEAD_CELL || userField[iCell][jCell] == MISS_CELL) {
                             isCorrectInput = false;
                             continue;
@@ -155,15 +171,16 @@ public class Main {
                     } while (isCorrectInput == false);
 
                     if (userField[iCell][jCell] == EMPTY_CELL) {
-                        userField[iCell][jCell] = MISS_CELL;
-                        step = USER_STEP;
+                        userField[iCell][jCell] = MISS_CELL;//если промахнулся
+                        step = USER_STEP;//переход игроку
                     } else if (userField[iCell][jCell] == SHIP_CELL) {
-                        userField[iCell][jCell] = DEAD_CELL;
-                        countUserShips--;
+                        userField[iCell][jCell] = DEAD_CELL;//убил
+                        countUserShips--;//уменьшает кол-во кораблей игрока
                     }
                     break;
             }
 
+            //проверка,у кого первого закончились корабли
             if (countCompShips == 0) {
                 winner = USER_WIN;
                 isPlay = false;
@@ -173,6 +190,7 @@ public class Main {
             }
         }
 
+        //вывод окончательного результата
         for (int k = 0; k < 50; k++) {
             System.out.println();
         }
