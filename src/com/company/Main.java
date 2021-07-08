@@ -13,33 +13,36 @@ public class Main {
         //5.ход компа (выстрел в поле человека путём рандома кординат, при успехе повторить ход)
         //6.проверка после каждого выстрела на поббеду одного из игроков, если кто-то выиграл, то закончить игру иначе перейти на шаг 4
 
+        //символы в поле
         final char EMPTY_CELL = '.';
         final char SHIP_CELL = 'K';
         final char MISS_CELL = 'O';
         final char DEAD_CELL = 'X';
 
-        final int USER_STEP = 1;
-        final int COMP_STEP = 2;
 
+        final int USER_STEP = 1;//ход игрока-первый
+        final int COMP_STEP = 2;//ход компа-второй
+
+        //вывод при окончании игры
         final String USER_WIN = "Победил игрок";
         final String COMP_WIN = "Победил компьютер";
 
         Random random = new Random();
 
         //поля
-        int fieldSize = 2;
-        char compField[][] = new char[fieldSize][fieldSize];
-        char userField[][] = new char[fieldSize][fieldSize];
+        int fieldSize = 2;//кол-во клеток по i и j
+        char compField[][] = new char[fieldSize][fieldSize];//поле компа
+        char userField[][] = new char[fieldSize][fieldSize];//поле игрока
 
-        int countCompShips = fieldSize;
-        int countUserShips = fieldSize;
+        int countCompShips = fieldSize;//считать кол-во кораблей компа
+        int countUserShips = fieldSize;//считать кол-во кораблей игрока
 
-        int iCell = 0, jCell = 0;
+        int iCell = 0, jCell = 0;//клетки для заполнения по вертикали и горизонтали
 
-        boolean isPlay = true;
-        int step = USER_STEP;
-        boolean isCorrectInput = true;
-        String winner = "";
+        boolean isPlay = true; //процесс игрового цикла
+        int step = USER_STEP;//ход
+        boolean isCorrectInput = true;//корректный ввод
+        String winner = "";//вывод в конце игры
 
         //обнулили поля
         for (int i = 0; i < fieldSize; i++) {
@@ -57,17 +60,18 @@ public class Main {
                 jCell = random.nextInt(fieldSize);
             } while (compField[iCell][jCell] != EMPTY_CELL);
 
-            compField[iCell][jCell] = SHIP_CELL;
+            compField[iCell][jCell] = SHIP_CELL;//сделанный ход
         }
 
         //поле игрока
         for (int k = 0; k < countUserShips; k++) {
+            //проверка,чтобы не ставились друг на друга символы
             do {
                 iCell = random.nextInt(fieldSize);
                 jCell = random.nextInt(fieldSize);
             } while (userField[iCell][jCell] != EMPTY_CELL);
 
-            userField[iCell][jCell] = SHIP_CELL;
+            userField[iCell][jCell] = SHIP_CELL;//сделанный ход
         }
 
         //игровой цикл
@@ -93,8 +97,9 @@ public class Main {
             System.out.println("Поле компьютера:");
             for (int i = 0; i < fieldSize; i++) {
                 for (int j = 0; j < fieldSize; j++) {
+
+                    //выводит точку,чтобы скрыты были корабли на поле компа
                     if (compField[i][j] == SHIP_CELL) {
-                        //выводит точку,чтобы скрыты были корабли
                         System.out.printf("%-2c", EMPTY_CELL);
                     } else {
                         System.out.printf("%-2c", compField[i][j]);
@@ -114,7 +119,7 @@ public class Main {
                         isCorrectInput = true;
                         Scanner input = new Scanner(System.in);
 
-                        //ввод игрока
+                        //ввод координат игроком по i и j
                         try {
                             System.out.print("Введите i: ");
                             iCell = input.nextInt();
@@ -126,14 +131,14 @@ public class Main {
                             continue;
                         }
 
-                        //проверка
+                        //проверка границ
                         if (iCell < 0 || iCell > fieldSize - 1 || jCell < 0 || jCell > fieldSize - 1) {
-                            isCorrectInput = false;
+                            isCorrectInput = false;//если не входит в границы поля,продолжать вводить
                             continue;
                         }
 
                         if (compField[iCell][jCell] == DEAD_CELL || compField[iCell][jCell] == MISS_CELL) {
-                            isCorrectInput = false;
+                            isCorrectInput = false;//если попадает в уже использованную ячейку,продолжать вводить
                             continue;
                         }
 
